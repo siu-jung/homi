@@ -59,7 +59,8 @@ homid_xal_setup(struct xal_opts *opts, struct homid_device *device)
 	}
 
 	device->watching = false;
-	if (opts->watch_mode) {
+	if (opts->watch_mode == XAL_WATCHMODE_DIRTY_DETECTION ||
+	    opts->watch_mode == XAL_WATCHMODE_EXTENT_UPDATE) {
 		err = xal_watch_filesystem(xal, on_xal_dirty, NULL);
 		if (err) {
 			homid_log(LOG_WARNING, "xal_watch_filesystem(): %d; filesystem watch unavailable", err);

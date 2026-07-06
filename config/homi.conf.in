@@ -13,7 +13,10 @@ ipc_socket = "/run/homi/homi.sock"
 [xal]
 # xfs = 1, fiemap = 2
 backend = 2
-# none = 0, dirty detection = 1, extent update = 2
+# none = 0, dirty detection = 1, extent update = 2, reflink snapshot = 3
 watchmode = 2
 # traverse = 0, hashmap = 1
 file_lookupmode = 0
+# reflink snapshot (watchmode = 3) only: absolute path under which regular files
+# are reflinked into the snapshot; leave unset/empty to snapshot the whole tree.
+# subtree = "/mnt/aisio/data"
