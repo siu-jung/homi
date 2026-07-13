@@ -10,7 +10,7 @@
 #include <homid.h>
 #include <homid_ipc.h>
 #include <homid_log.h>
-#include <homid_xal.h>
+#include <homid_dev.h>
 #include <homi_proto.h>
 
 struct worker_args {

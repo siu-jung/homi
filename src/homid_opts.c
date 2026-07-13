@@ -6,7 +6,7 @@
 #include <libxal.h>
 
 #include <homid_log.h>
-#include <homid_xal.h>
+#include <homid_dev.h>
 #include <homid_opts.h>
 
 static int

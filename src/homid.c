@@ -12,7 +12,7 @@
 #include <homid.h>
 #include <homid_ipc.h>
 #include <homid_log.h>
-#include <homid_xal.h>
+#include <homid_dev.h>
 #include <homid_opts.h>
 
 volatile sig_atomic_t stop = 0;

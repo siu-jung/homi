@@ -1,5 +1,5 @@
-#ifndef HOMID_XAL_H
-#define HOMID_XAL_H
+#ifndef HOMID_DEV_H
+#define HOMID_DEV_H
 
 #include <stdbool.h>
 
@@ -78,4 +78,4 @@ homid_device_setup(struct homid_opts *opts, struct homid_device **devices);
 struct homid_device *
 homid_device_get(struct homid *homid, char *uri);
 
-#endif /* HOMID_XAL_H */
+#endif /* HOMID_DEV_H */
