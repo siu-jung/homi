@@ -52,7 +52,7 @@ homid_xnvme_setup(char *uri, struct xnvme_dev **device);
  * @param devices	Array of homid_device to clean.
  */
 void
-homid_device_close(unsigned int ndevs, struct homid_device *devices);
+homid_dev_close(unsigned int ndevs, struct homid_device *devices);
 
 /**
  * Setup array of homid_device
@@ -65,7 +65,7 @@ homid_device_close(unsigned int ndevs, struct homid_device *devices);
  * @return			0 on success, negative errno on failure.
  */
 int
-homid_device_setup(struct homid_opts *opts, struct homid_device **devices);
+homid_dev_open(struct homid_opts *opts, struct homid_device **devices);
 
 /**
  * Get a pointer to the homid_device from a given device URI
@@ -76,6 +76,6 @@ homid_device_setup(struct homid_opts *opts, struct homid_device **devices);
  *                none is found.
  */
 struct homid_device *
-homid_device_get(struct homid *homid, char *uri);
+homid_dev_get(struct homid *homid, char *uri);
 
 #endif /* HOMID_DEV_H */

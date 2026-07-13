@@ -127,7 +127,7 @@ worker(void *arg)
 			goto send_response;
 		}
 
-		device = homid_device_get(homid, req->dev_uri);
+		device = homid_dev_get(homid, req->dev_uri);
 
 		if (!device) {
 			homid_log(LOG_ERR, "XAL_CONNECT: device not found: %s", req->dev_uri);

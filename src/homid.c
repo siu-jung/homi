@@ -70,9 +70,9 @@ homid_initialize(struct homid_opts *opts, struct homid **homid)
 	}
 
 	cand->ndevs = opts->ndevs;
-	err = homid_device_setup(opts, &cand->dev);
+	err = homid_dev_open(opts, &cand->dev);
 	if (err) {
-		homid_log(LOG_ERR, "Failed: homid_device_setup()");
+		homid_log(LOG_ERR, "Failed: homid_dev_open()");
 		goto failed;
 	}
 
@@ -92,7 +92,7 @@ homid_close(struct homid *homid) {
 		return 0;
 	}
 
-	homid_device_close(homid->ndevs, homid->dev);
+	homid_dev_close(homid->ndevs, homid->dev);
 	homid_ipc_close(homid->conn);
 
 	return 0;

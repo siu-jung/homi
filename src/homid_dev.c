@@ -97,7 +97,7 @@ homid_xnvme_setup(char *uri, struct xnvme_dev **device)
 }
 
 void
-homid_device_close(unsigned int ndevs, struct homid_device *devices)
+homid_dev_close(unsigned int ndevs, struct homid_device *devices)
 {
 	if (!devices) {
 		return;
@@ -123,7 +123,7 @@ homid_device_close(unsigned int ndevs, struct homid_device *devices)
 }
 
 int
-homid_device_setup(struct homid_opts *opts, struct homid_device **devices)
+homid_dev_open(struct homid_opts *opts, struct homid_device **devices)
 {
 	struct xal_opts *xal_opts = &opts->xal_opts;
 	struct homid_device *devs;
@@ -161,12 +161,12 @@ homid_device_setup(struct homid_opts *opts, struct homid_device **devices)
 	return 0;
 
 failed:
-	homid_device_close(ndevs, devs);
+	homid_dev_close(ndevs, devs);
 	return err;
 }
 
 struct homid_device *
-homid_device_get(struct homid *homid, char *uri)
+homid_dev_get(struct homid *homid, char *uri)
 {
 	struct homid_device *found = NULL;
 
