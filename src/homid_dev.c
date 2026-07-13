@@ -28,6 +28,35 @@ on_xal_dirty(struct xal *xal, void *cb_args)
 	}
 }
 
+int
+homid_dev_xal_index(struct homid_device *device)
+{
+	bool expected = false;
+	int err;
+
+	// Set to true when indexing starts to ensure other threads do not start
+	// indexing at the same time.
+	if (atomic_compare_exchange_strong(&device->indexed, &expected, true)) {
+		err = xal_index(device->xal);
+		if (err) {
+			homid_log(LOG_ERR, "xal_index(): %d", err);
+			atomic_store(&device->indexed, false);
+			return err;
+		}
+
+		if (device->watchstate == HOMID_DEV_XAL_WATCHSTATE_IDLE) {
+			err = xal_watch_filesystem(device->xal, on_xal_dirty, NULL);
+			if (err) {
+				homid_log(LOG_WARNING, "xal_watch_filesystem(): %d; filesystem watch unavailable", err);
+			} else {
+				device->watchstate = HOMID_DEV_XAL_WATCHSTATE_WATCHING;
+			}
+		}
+	}
+
+	return 0;
+}
+
 /**
  * Setup xal for the homid_device
  *
@@ -62,20 +91,8 @@ _xal_init(struct xal_opts *opts, struct homid_device *device)
 		goto close_xal;
 	}
 
-	err = xal_index(xal);
-	if (err) {
-		homid_log(LOG_ERR, "xal_index(): %d", err);
-		goto close_xal;
-	}
-
-	device->watching = false;
 	if (opts->watch_mode) {
-		err = xal_watch_filesystem(xal, on_xal_dirty, NULL);
-		if (err) {
-			homid_log(LOG_WARNING, "xal_watch_filesystem(): %d; filesystem watch unavailable", err);
-		} else {
-			device->watching = true;
-		}
+		device->watchstate = HOMID_DEV_XAL_WATCHSTATE_IDLE;
 	}
 
 	device->xal = xal;

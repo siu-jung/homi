@@ -135,6 +135,13 @@ worker(void *arg)
 			goto send_response;
 		}
 
+		err = homid_dev_xal_index(device);
+		if (err) {
+			homid_log(LOG_ERR, "Failed: homid_dev_xal_index()");
+			res.err = err;
+			goto send_response;
+		}
+
 		memcpy(res.shm_name, device->shm_name, sizeof(res.shm_name));
 
 send_response:

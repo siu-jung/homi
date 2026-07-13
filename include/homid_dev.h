@@ -2,19 +2,31 @@
 #define HOMID_DEV_H
 
 #include <stdbool.h>
+#include <stdatomic.h>
 
 #include <homi_proto.h>
 #include <homid_opts.h>
 
 struct homid;
 
+enum homid_dev_xal_watchstate {
+	HOMID_DEV_XAL_WATCHSTATE_NONE = 0,     ///< Will not listen for file changes
+	HOMID_DEV_XAL_WATCHSTATE_IDLE = 1,     ///< Will listen for file changes, but is not started
+	HOMID_DEV_XAL_WATCHSTATE_WATCHING = 2, ///< Is actively listening for file changes.
+};
+
 struct homid_device {
 	struct xnvme_dev *dev;
 	struct xal *xal;
 	bool watching;
 	char uri[HOMID_DEVURI_MAXLEN];
+	enum homid_dev_xal_watchstate watchstate;
+	_Atomic bool indexed;
 	char shm_name[64];
 };
+
+int
+homid_dev_xal_index(struct homid_device *device);
 
 /**
  * Cleans up array of homid_device
