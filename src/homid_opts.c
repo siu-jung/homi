@@ -22,7 +22,7 @@ homid_opts_from_toml(char *config_file, struct homid_opts *opts)
 {
 	toml_result_t result;
 	toml_datum_t log_level, devices, ipc_socket;
-	toml_datum_t xal_backend, xal_watchmode, xal_file_lookupmode;
+	toml_datum_t xal_backend, xal_watchmode, xal_file_lookupmode, xal_subtree;
 	int err = 0;
 
 	result = toml_parse_file_ex(config_file);
@@ -138,6 +138,7 @@ homid_opts_from_toml(char *config_file, struct homid_opts *opts)
 	case XAL_WATCHMODE_NONE:
 	case XAL_WATCHMODE_DIRTY_DETECTION:
 	case XAL_WATCHMODE_EXTENT_UPDATE:
+	case XAL_WATCHMODE_REFLINK_SNAPSHOT:
 		opts->xal_opts.watch_mode = xal_watchmode.u.int64;
 		break;
 	default:
@@ -159,6 +160,21 @@ homid_opts_from_toml(char *config_file, struct homid_opts *opts)
 	default:
 		homid_log(LOG_WARNING, "'xal.file_lookupmode' defaulting to 'traverse'");
 		opts->xal_opts.file_lookupmode = XAL_FILE_LOOKUPMODE_TRAVERSE;
+	}
+
+	// Optional; only meaningful for XAL_WATCHMODE_REFLINK_SNAPSHOT. Absent/empty => whole tree.
+	if (opts->xal_opts.watch_mode == XAL_WATCHMODE_REFLINK_SNAPSHOT) {
+		xal_subtree = toml_seek(result.toptab, "xal.subtree");
+		if (xal_subtree.type == TOML_STRING && strlen(xal_subtree.u.s)) {
+			char *subtree = strdup(xal_subtree.u.s);
+
+			if (!subtree) {
+				err = -errno;
+				homid_log(LOG_ERR, "Failed: strdup(); errno(%d)", errno);
+				goto exit;
+			}
+			opts->xal_opts.reflink_subtree = subtree;
+		}
 	}
 
 exit:

@@ -91,7 +91,8 @@ _xal_init(struct xal_opts *opts, struct homid_dev *dev)
 		goto close_xal;
 	}
 
-	if (opts->watch_mode) {
+	if (opts->watch_mode == XAL_WATCHMODE_DIRTY_DETECTION ||
+	    opts->watch_mode == XAL_WATCHMODE_EXTENT_UPDATE) {
 		dev->homid_xal.watchstate = HOMID_DEV_XAL_WATCHSTATE_IDLE;
 	}
 
