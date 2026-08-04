@@ -162,19 +162,18 @@ homid_opts_from_toml(char *config_file, struct homid_opts *opts)
 		opts->xal_opts.file_lookupmode = XAL_FILE_LOOKUPMODE_TRAVERSE;
 	}
 
-	// Optional; only meaningful for XAL_WATCHMODE_REFLINK_SNAPSHOT. Absent/empty => whole tree.
-	if (opts->xal_opts.watch_mode == XAL_WATCHMODE_REFLINK_SNAPSHOT) {
-		xal_subtree = toml_seek(result.toptab, "xal.subtree");
-		if (xal_subtree.type == TOML_STRING && strlen(xal_subtree.u.s)) {
-			char *subtree = strdup(xal_subtree.u.s);
+	// Optional FIEMAP-backend index scope (general; in reflink-snapshot mode it also bounds what
+	// gets cloned). Absent/empty => whole mount. Ignored by the XFS backend.
+	xal_subtree = toml_seek(result.toptab, "xal.subtree");
+	if (xal_subtree.type == TOML_STRING && strlen(xal_subtree.u.s)) {
+		char *subtree = strdup(xal_subtree.u.s);
 
-			if (!subtree) {
-				err = -errno;
-				homid_log(LOG_ERR, "Failed: strdup(); errno(%d)", errno);
-				goto exit;
-			}
-			opts->xal_opts.reflink_subtree = subtree;
+		if (!subtree) {
+			err = -errno;
+			homid_log(LOG_ERR, "Failed: strdup(); errno(%d)", errno);
+			goto exit;
 		}
+		opts->xal_opts.subtree = subtree;
 	}
 
 exit:

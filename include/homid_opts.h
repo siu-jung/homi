@@ -22,7 +22,7 @@ struct homid_opts {
  * - xal.backend (int)
  * - xal.watchmode (int)
  * - xal.file_lookupmode (int)
- * - xal.subtree (string, optional; reflink-snapshot subtree)
+ * - xal.subtree (string, optional; FIEMAP-backend index scope, any watch mode)
  *
  * @param path Path to the configuration file
  * @param opts homid_opts struct that the configuration will be loaded into

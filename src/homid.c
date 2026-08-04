@@ -150,7 +150,7 @@ exit:
 	free(homid);
 	closelog();
 	free(opts.dev_uris);
-	free((void *)opts.xal_opts.reflink_subtree);
+	free((void *)opts.xal_opts.subtree);
 
 	return err;
 }

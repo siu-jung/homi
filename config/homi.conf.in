@@ -17,6 +17,6 @@ backend = 2
 watchmode = 2
 # traverse = 0, hashmap = 1
 file_lookupmode = 0
-# reflink snapshot (watchmode = 3) only: absolute path under which regular files
-# are reflinked into the snapshot; leave unset/empty to snapshot the whole tree.
+# absolute path under which regular files are indexed;
+# leave unset/empty to index the whole tree.
 # subtree = "/mnt/aisio/data"
